@@ -14,7 +14,24 @@ namespace Lesson3
     {
         private static void Main(string[] args)
         {
-            var clients = JsonConvert.DeserializeObject<List<BankClient>>(File.ReadAllText(@"bankClients.json"));
+            List<BankClient> clients;
+            try
+            {
+                clients = JsonConvert.DeserializeObject<List<BankClient>>(File.ReadAllText(@"bankClients.json"));
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("Can`t find \"bankClients.json\".");
+                ContinueMessage();
+                return;
+            }
+            catch (JsonReaderException)
+            {
+                Console.WriteLine("\"bankClients.json\" file was corrupted.");
+                ContinueMessage();
+                return;
+            }
+            
             
             //First
             var sumAmountForApril = clients.SelectMany(operation => operation.Operations)
